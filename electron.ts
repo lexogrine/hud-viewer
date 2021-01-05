@@ -3,7 +3,6 @@ import { app, BrowserWindow } from 'electron';
 import path from 'path';
 export const isDev = process.env.DEV === 'true';
 
-
 const createMainWindow = () => {
 	let win: BrowserWindow | null;
 
@@ -43,7 +42,7 @@ const createMainWindow = () => {
 	// win.setMenu(null);
 	win.setMenuBarVisibility(!isDev);
 
-	win.loadURL(isDev ? "http://localhost:3000" : `file://${__dirname}/build/index.html`);
+	win.loadURL(isDev ? 'http://localhost:3000' : `file://${__dirname}/build/index.html`);
 	win.on('close', () => {
 		win = null;
 		app.quit();

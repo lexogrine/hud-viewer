@@ -52,6 +52,7 @@
     "test": "react-scripts test",
     "dev": "concurrently \"cross-env BROWSER=none npm start\" \"npm run electron\"",
     "dist": "electron-builder",
+    "lint": "eslint . --ext .ts,.tsx",
     "eject": "react-scripts eject",
     "prettier-format": "prettier --config .prettierrc --write **/*.{ts,tsx}"
   },

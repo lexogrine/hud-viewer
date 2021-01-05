@@ -27,8 +27,8 @@ const createMainWindow = () => {
 		title: 'Lexogrine HUD Reader',
 		icon: path.join(__dirname, 'assets/icon.png'),
 		webPreferences: {
-            backgroundThrottling: false,
-            nodeIntegration: true,
+			backgroundThrottling: false,
+			nodeIntegration: true,
 			devTools: isDev
 		},
 		minWidth: 775,

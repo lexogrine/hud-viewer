@@ -4,7 +4,6 @@ import * as path from 'path';
 //import socketio, { Socket } from 'socket.io-client';
 import * as I from './interfaces';
 
-
 class HUD {
 	current: BrowserWindow | null;
 	tray: Tray | null;
@@ -22,7 +21,7 @@ class HUD {
 		if (hud === null) return null;
 		const hudWindow = new BrowserWindow({
 			fullscreen: true,
-            show: false,
+			show: false,
 			title: hud.name,
 			resizable: false,
 			alwaysOnTop: true,
@@ -84,9 +83,9 @@ class HUD {
 		this.current.show();
 
 		globalShortcut.register('Alt+r', () => {
-            //match.reverseSide(io);
-            console.log('REVERSE MATCH')
-            if(io) io.emit('readerReverseSide');
+			//match.reverseSide(io);
+			console.log('REVERSE MATCH');
+			if (io) io.emit('readerReverseSide');
 		});
 
 		globalShortcut.register('Alt+F', () => {
@@ -97,8 +96,8 @@ class HUD {
 		if (hud.keybinds) {
 			for (const bind of hud.keybinds) {
 				globalShortcut.register(bind.bind, () => {
-                    console.log(`BIND: ${bind}`)
-					if(io) io.emit('readerKeybindAction', hud.dir, bind.action);
+					console.log(`BIND: ${bind}`);
+					if (io) io.emit('readerKeybindAction', hud.dir, bind.action);
 				});
 			}
 		}

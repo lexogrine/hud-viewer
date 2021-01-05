@@ -1,13 +1,13 @@
 export type PanelInputType =
-| 'text'
-| 'number'
-| 'team'
-| 'image'
-| 'match'
-| 'player'
-| 'select'
-| 'action'
-| 'checkbox';
+	| 'text'
+	| 'number'
+	| 'team'
+	| 'image'
+	| 'match'
+	| 'player'
+	| 'select'
+	| 'action'
+	| 'checkbox';
 
 export interface GeneralInput {
 	type: Exclude<PanelInputType, 'select' | 'action' | 'checkbox'>;
@@ -28,7 +28,7 @@ export interface SelectActionInput {
 export interface CheckboxInput {
 	type: 'checkbox';
 	name: string;
-    label: string;
+	label: string;
 }
 
 export type PanelInput = GeneralInput | SelectActionInput | CheckboxInput;
@@ -43,7 +43,6 @@ export type PanelTemplate = {
 	name: string;
 	inputs: PanelInput[];
 };
-
 
 export interface HUD {
 	name: string;

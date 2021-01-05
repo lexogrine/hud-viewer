@@ -25,8 +25,7 @@ ipcMain.on('reload', (event, code: string) => {
 		});
 });
 
-ipcMain.on("openHUD", (event, hud: I.HUD) => {
+ipcMain.on('openHUD', (event, hud: I.HUD) => {
 	HUD.open(hud);
 	//console.log(hud);
 });
-

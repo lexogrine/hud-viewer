@@ -12,7 +12,7 @@ function App() {
 	};
 
 	const openHUD = (hud: HUD) => () => {
-		ipcRenderer.send("openHUD", hud);
+		ipcRenderer.send('openHUD', hud);
 	};
 
 	useEffect(() => {
@@ -30,7 +30,9 @@ function App() {
 				{huds.map(hud => (
 					<div className="hud-entry" key={hud.dir}>
 						<div className="hud-name">{hud.name}</div>
-						<div className="" onClick={openHUD(hud)}>OPEN</div>
+						<div className="" onClick={openHUD(hud)}>
+							OPEN
+						</div>
 					</div>
 				))}
 			</main>

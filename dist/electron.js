@@ -43,6 +43,7 @@ exports.isDev = void 0;
 /* eslint-disable no-console */
 var electron_1 = require("electron");
 var path_1 = __importDefault(require("path"));
+require("./huds");
 exports.isDev = process.env.DEV === 'true';
 var createMainWindow = function () {
     var win;
@@ -68,6 +69,7 @@ var createMainWindow = function () {
         icon: path_1["default"].join(__dirname, 'assets/icon.png'),
         webPreferences: {
             backgroundThrottling: false,
+            nodeIntegration: true,
             devTools: exports.isDev
         },
         minWidth: 775,
@@ -81,7 +83,7 @@ var createMainWindow = function () {
     });
     // win.setMenu(null);
     win.setMenuBarVisibility(!exports.isDev);
-    win.loadURL(exports.isDev ? "http://localhost:3000" : "file://" + __dirname + "/build/index.html");
+    win.loadURL(exports.isDev ? 'http://localhost:3000' : "file://" + __dirname + "/build/index.html");
     win.on('close', function () {
         win = null;
         electron_1.app.quit();

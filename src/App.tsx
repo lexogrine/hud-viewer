@@ -1,18 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+const { ipcRenderer } = window.require('electron');
 
 function App() {
+	const [ code, setCode ] = useState('C0-A8-2B-BF');
+	const [ apiAddress, setAPI ] = useState<string | null>(null);
+
+	const requestHUDs = () => {
+		ipcRenderer.send("reload", code);
+	}
+
+	const loadHUDs = () => {
+
+	}
+
+	useEffect(() => {
+		ipcRenderer.on("huds", (event: any, huds: any) => {
+			console.log(huds);
+		});
+	}, [])
+
+
+
 	return (
 		<div className="App">
 			<header className="App-header">
-				<img src={logo} className="App-logo" alt="logo" />
-				<p>
-					Edit <code>src/App.tsx</code> and save to reload.
-				</p>
-				<a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-					Learn React
-				</a>
+				<p>Lexogrine HUD Reader</p>
+				<input onChange={e => setCode(e.target.value)} value={code} />
+				<button onClick={requestHUDs}>Connect</button>
 			</header>
 		</div>
 	);

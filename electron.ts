@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
+import './huds';
 export const isDev = process.env.DEV === 'true';
 
 const createMainWindow = () => {
@@ -26,7 +27,8 @@ const createMainWindow = () => {
 		title: 'Lexogrine HUD Reader',
 		icon: path.join(__dirname, 'assets/icon.png'),
 		webPreferences: {
-			backgroundThrottling: false,
+            backgroundThrottling: false,
+            nodeIntegration: true,
 			devTools: isDev
 		},
 		minWidth: 775,

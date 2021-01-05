@@ -7,8 +7,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@types/jest": "^26.0.15",
-    "@types/node": "^12.0.0",
-    "@types/react": "^16.9.53",
+    "@types/react": "^16.14.2",
     "@types/react-dom": "^16.9.8",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -16,11 +15,45 @@
     "typescript": "^4.0.3",
     "web-vitals": "^0.2.4"
   },
+  "build": {
+    "appId": "com.lexogrine.hudreader",
+    "productName": "Lexogrine HUD Reader",
+    "win": {
+      "icon": "./dist/build/favicon.ico",
+      "target": "NSIS"
+    },
+    "directories": {
+      "output": "app",
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json",
+      {
+        "from": "dist",
+        "to": "build",
+        "filter": "**/*"
+      },
+      "!**/*.asar",
+      "!**/app/**/*",
+      "!**/app/*",
+      "!**/win-unpacked/*",
+      "!**/.git/**/*",
+      "!**/.git/*"
+    ]
+  },
+  "main": "dist/electron.js",
   "scripts": {
+    "transpile": "tsc electron.ts --outDir dist --esModuleInterop true",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run transpile && react-scripts build && rm -rf dist/build &&  mv build dist",
+    "devElectron": "cross-env DEV=true electron ./",
+    "electron": "npm run transpile && npm run devElectron",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"npm run electron\"",
+    "dist": "electron-builder",
+    "eject": "react-scripts eject",
+    "prettier-format": "prettier --config .prettierrc --write **/*.{ts,tsx}"
   },
   "eslintConfig": {
     "extends": [
@@ -39,5 +72,25 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.37",
+    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/parser": "^4.12.0",
+    "concurrently": "^5.3.0",
+    "cross-env": "^7.0.3",
+    "electron": "^11.1.1",
+    "electron-builder": "^22.9.1",
+    "electron-rebuild": "^2.3.4",
+    "eslint": "^7.17.0",
+    "eslint-plugin-react": "^7.22.0",
+    "husky": "^4.3.6",
+    "prettier": "^2.2.1",
+    "wait-on": "^5.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier-format && npm run lint"
+    }
   }
 }

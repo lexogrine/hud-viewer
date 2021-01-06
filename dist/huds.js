@@ -25,7 +25,7 @@ electron_1.ipcMain.on('reload', function (event, code) {
         event.reply('huds', null);
     });
 });
-electron_1.ipcMain.on("openHUD", function (event, hud) {
+electron_1.ipcMain.on('openHUD', function (event, hud) {
     overlay_1["default"].open(hud);
     //console.log(hud);
 });

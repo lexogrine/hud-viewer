@@ -56,8 +56,6 @@ var HUD = /** @class */ (function () {
                 hudWindow = new electron_1.BrowserWindow({
                     fullscreen: true,
                     show: false,
-                    width: 1920,
-                    height: 1080,
                     title: hud.name,
                     resizable: false,
                     alwaysOnTop: true,
@@ -83,8 +81,9 @@ var HUD = /** @class */ (function () {
                         { label: 'Close HUD', click: () => this.close() }
                     ]);
                     tray.popUpContextMenu(contextMenu);
-                });*/
-                //this.tray = tray;
+                });
+        
+                this.tray = tray;*/
                 this.current = hudWindow;
                 this.hud = hud;
                 this.showWindow(hud, io);
@@ -125,8 +124,10 @@ var HUD = /** @class */ (function () {
                 return;
             _this.current.loadURL(hud.url);
         });
+        console.log(hud.keybinds);
         if (hud.keybinds) {
             var _loop_1 = function (bind) {
+                console.log('Registered', bind.bind);
                 electron_1.globalShortcut.register(bind.bind, function () {
                     console.log("BIND: " + bind);
                     if (io)

@@ -69,8 +69,7 @@ var createMainWindow = function () {
         icon: path_1["default"].join(__dirname, 'assets/icon.png'),
         webPreferences: {
             backgroundThrottling: false,
-            nodeIntegration: true,
-            devTools: exports.isDev
+            nodeIntegration: true
         },
         minWidth: 775,
         minHeight: 435,

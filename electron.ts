@@ -28,8 +28,8 @@ const createMainWindow = () => {
 		icon: path.join(__dirname, 'assets/icon.png'),
 		webPreferences: {
 			backgroundThrottling: false,
-			nodeIntegration: true,
-			devTools: isDev
+			nodeIntegration: true
+			//devTools: isDev
 		},
 		minWidth: 775,
 		minHeight: 435,

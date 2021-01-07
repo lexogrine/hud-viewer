@@ -91,7 +91,7 @@ var HUD = /** @class */ (function () {
                 });
                 hudWindow.setIgnoreMouseEvents(true);
                 tray = new electron_1.Tray(path.join(__dirname, 'favicon.ico'));
-                tray.setToolTip('HUD Manager');
+                tray.setToolTip('Lexogrine HUD Reader');
                 tray.on('right-click', function () {
                     var contextMenu = electron_1.Menu.buildFromTemplate([
                         { label: hud.name, enabled: false },
@@ -132,8 +132,6 @@ var HUD = /** @class */ (function () {
         this.current.setOpacity(1);
         this.current.show();
         electron_1.globalShortcut.register('Alt+r', function () {
-            //match.reverseSide(io);
-            console.log('REVERSE MATCH');
             if (io)
                 io.emit('readerReverseSide');
         });
@@ -145,7 +143,6 @@ var HUD = /** @class */ (function () {
         if (hud.keybinds) {
             var _loop_1 = function (bind) {
                 electron_1.globalShortcut.register(bind.bind, function () {
-                    console.log("BIND: " + bind.action);
                     if (io)
                         io.emit('readerKeybindAction', hud.dir, bind.action);
                 });

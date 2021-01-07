@@ -13,8 +13,8 @@ electron_1.ipcMain.on('reload', function (event, address) {
         .then(function (res) { return res.json(); })
         .then(function (res) {
         socket = socket_io_client_1["default"].connect(address);
-        socket.on("readyToRegister", function () {
-            socket.emit("registerReader");
+        socket.on('readyToRegister', function () {
+            socket.emit('registerReader');
         });
         event.reply('huds', res);
     })["catch"](function () {

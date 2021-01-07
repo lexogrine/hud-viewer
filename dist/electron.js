@@ -60,10 +60,10 @@ var createMainWindow = function () {
         }); });
     }
     win = new electron_1.BrowserWindow({
-        height: 835,
+        height: 535,
         show: false,
-        frame: exports.isDev,
-        titleBarStyle: exports.isDev ? 'hidden' : 'default',
+        frame: false,
+        titleBarStyle: 'hidden',
         //resizable: isDev,
         title: 'Lexogrine HUD Reader',
         icon: path_1["default"].join(__dirname, 'assets/icon.png'),
@@ -73,8 +73,22 @@ var createMainWindow = function () {
             devTools: exports.isDev
         },
         minWidth: 775,
-        minHeight: 835,
+        minHeight: 435,
         width: 1010
+    });
+    electron_1.ipcMain.on('min', function () {
+        win.minimize();
+    });
+    electron_1.ipcMain.on('max', function () {
+        if (win.isMaximized()) {
+            win.restore();
+        }
+        else {
+            win.maximize();
+        }
+    });
+    electron_1.ipcMain.on('close', function () {
+        win.close();
     });
     win.once('ready-to-show', function () {
         if (win) {

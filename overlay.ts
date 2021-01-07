@@ -16,7 +16,7 @@ class HUD {
 		this.hud = null;
 	}
 
-	async open(hud: I.HUD, io?: SocketIOClient.Socket) {
+	async open(hud: I.HUD, io: SocketIOClient.Socket | null) {
 		if (this.current !== null || this.hud !== null) return null;
 		if (hud === null) return null;
 		const hudWindow = new BrowserWindow({
@@ -77,14 +77,12 @@ class HUD {
 		return true;
 	}
 
-	showWindow(hud: I.HUD, io?: SocketIOClient.Socket) {
+	showWindow(hud: I.HUD, io: SocketIOClient.Socket | null) {
 		if (!this.current) return;
 		this.current.setOpacity(1);
 		this.current.show();
 
 		globalShortcut.register('Alt+r', () => {
-			//match.reverseSide(io);
-			console.log('REVERSE MATCH');
 			if (io) io.emit('readerReverseSide');
 		});
 
@@ -96,7 +94,6 @@ class HUD {
 		if (hud.keybinds) {
 			for (const bind of hud.keybinds) {
 				globalShortcut.register(bind.bind, () => {
-					console.log(`BIND: ${bind}`);
 					if (io) io.emit('readerKeybindAction', hud.dir, bind.action);
 				});
 			}

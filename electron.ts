@@ -19,10 +19,10 @@ const createMainWindow = () => {
 	}
 
 	win = new BrowserWindow({
-		height: 835,
+		height: 535,
 		show: false,
-		frame: isDev,
-		titleBarStyle: isDev ? 'hidden' : 'default',
+		frame: false,
+		titleBarStyle: 'hidden',
 		//resizable: isDev,
 		title: 'Lexogrine HUD Reader',
 		icon: path.join(__dirname, 'assets/icon.png'),
@@ -32,9 +32,25 @@ const createMainWindow = () => {
 			devTools: isDev
 		},
 		minWidth: 775,
-		minHeight: 835,
+		minHeight: 435,
 		width: 1010
 	});
+
+	ipcMain.on('min', () => {
+		win.minimize();
+	});
+
+	ipcMain.on('max', () => {
+		if (win.isMaximized()) {
+			win.restore();
+		} else {
+			win.maximize();
+		}
+	});
+
+	ipcMain.on('close', () => {
+		win.close();
+	})
 
 	win.once('ready-to-show', () => {
 		if (win) {

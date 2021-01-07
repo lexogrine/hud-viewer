@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -37,6 +56,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var electron_1 = require("electron");
+var path = __importStar(require("path"));
 var HUD = /** @class */ (function () {
     function HUD() {
         this.current = null;
@@ -46,7 +66,7 @@ var HUD = /** @class */ (function () {
     }
     HUD.prototype.open = function (hud, io) {
         return __awaiter(this, void 0, void 0, function () {
-            var hudWindow;
+            var hudWindow, tray;
             var _this = this;
             return __generator(this, function (_a) {
                 if (this.current !== null || this.hud !== null)
@@ -70,20 +90,18 @@ var HUD = /** @class */ (function () {
                     hudWindow.setAlwaysOnTop(true);
                 });
                 hudWindow.setIgnoreMouseEvents(true);
-                /*const tray = new Tray(path.join(__dirname, 'favicon.ico'));
-        
+                tray = new electron_1.Tray(path.join(__dirname, 'favicon.ico'));
                 tray.setToolTip('HUD Manager');
-                tray.on('right-click', () => {
-                    const contextMenu = Menu.buildFromTemplate([
+                tray.on('right-click', function () {
+                    var contextMenu = electron_1.Menu.buildFromTemplate([
                         { label: hud.name, enabled: false },
                         { type: 'separator' },
-                        { label: 'Show', type: 'checkbox', click: () => this.toggleVisibility(), checked: this.show },
-                        { label: 'Close HUD', click: () => this.close() }
+                        { label: 'Show', type: 'checkbox', click: function () { return _this.toggleVisibility(); }, checked: _this.show },
+                        { label: 'Close HUD', click: function () { return _this.close(); } }
                     ]);
                     tray.popUpContextMenu(contextMenu);
                 });
-        
-                this.tray = tray;*/
+                this.tray = tray;
                 this.current = hudWindow;
                 this.hud = hud;
                 this.showWindow(hud, io);
@@ -124,12 +142,10 @@ var HUD = /** @class */ (function () {
                 return;
             _this.current.loadURL(hud.url);
         });
-        console.log(hud.keybinds);
         if (hud.keybinds) {
             var _loop_1 = function (bind) {
-                console.log('Registered', bind.bind);
                 electron_1.globalShortcut.register(bind.bind, function () {
-                    console.log("BIND: " + bind);
+                    console.log("BIND: " + bind.action);
                     if (io)
                         io.emit('readerKeybindAction', hud.dir, bind.action);
                 });

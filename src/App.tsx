@@ -15,9 +15,7 @@ const hashCode = (s: string) =>
 		.toString();
 
 const getIP = (code: string) => {
-	const ipNumbers = code
-		.split('-')
-		.map(n => parseInt(n, 16));
+	const ipNumbers = code.split('-').map(n => parseInt(n, 16));
 
 	const port = ipNumbers.pop();
 
@@ -33,7 +31,7 @@ function App() {
 	const requestHUDs = () => {
 		ipcRenderer.send('reload', getIP(code));
 	};
-	
+
 	useEffect(() => {
 		ipcRenderer.on('huds', (event: any, huds: HUD[] | null) => {
 			setHUDs(huds || []);
@@ -51,7 +49,6 @@ function App() {
 
 	return (
 		<div className="App">
-			
 			<div className="window-bar">
 				<div className="window-drag-bar"></div>
 				<div onClick={minimize} className="app-control minimize"></div>
@@ -60,13 +57,13 @@ function App() {
 			</div>
 			<div className="App-container">
 				<main>
-					{
-						huds.length ? null : <>
+					{huds.length ? null : (
+						<>
 							<p>Lexogrine HUD Reader</p>
 							<Input onChange={e => setCode(e.target.value.toUpperCase())} value={code.toUpperCase()} />
 							<Button onClick={requestHUDs}>Connect</Button>
 						</>
-					}
+					)}
 					{huds.map(hud => (
 						<HUDEntry hud={hud} url={getIP(code)} key={hashCode(hud.dir)} />
 					))}

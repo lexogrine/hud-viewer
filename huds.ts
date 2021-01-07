@@ -6,14 +6,13 @@ import io from 'socket.io-client';
 
 let socket: SocketIOClient.Socket | null = null;
 
-
 ipcMain.on('reload', (event, address: string) => {
 	fetch(`${address}/api/huds`)
 		.then(res => res.json())
 		.then(res => {
 			socket = io.connect(address);
-			socket.on("readyToRegister", () => {
-				socket.emit("registerReader");
+			socket.on('readyToRegister', () => {
+				socket.emit('registerReader');
 			});
 			event.reply('huds', res);
 		})

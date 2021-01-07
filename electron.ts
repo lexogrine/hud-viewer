@@ -50,7 +50,7 @@ const createMainWindow = () => {
 
 	ipcMain.on('close', () => {
 		win.close();
-	})
+	});
 
 	win.once('ready-to-show', () => {
 		if (win) {

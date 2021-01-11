@@ -61,7 +61,7 @@ function App() {
 						<>
 							<p>Lexogrine HUD Reader</p>
 							<Input onChange={e => setCode(e.target.value.toUpperCase())} value={code.toUpperCase()} />
-							<Button onClick={requestHUDs}>Connect</Button>
+							<Button className="round-btn" onClick={requestHUDs}>Connect</Button>
 						</>
 					)}
 					{huds.map(hud => (

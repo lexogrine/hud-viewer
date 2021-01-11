@@ -157,3 +157,19 @@ input.form-control:focus, select.form-control:focus {
   height: 63px;
   margin-top: 1px;
 }
+.btn {
+    box-shadow: none !important;
+    border: none;
+    height: 29px;
+    border-radius: 50px;
+    font-size: 8pt;
+    text-transform: uppercase;
+    padding-bottom: 3pt;
+    padding-left: 15pt;
+    padding-right: 15pt;
+    font-weight:600;
+    background-color: #7ad9f5;
+    color: #24272d;
+    font-weight: 700;
+    margin-left:25px;
+}

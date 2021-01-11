@@ -60,7 +60,7 @@ var createMainWindow = function () {
         }); });
     }
     win = new electron_1.BrowserWindow({
-        height: 535,
+        height: 435,
         show: false,
         frame: false,
         titleBarStyle: 'hidden',
@@ -70,10 +70,11 @@ var createMainWindow = function () {
         webPreferences: {
             backgroundThrottling: false,
             nodeIntegration: true
+            //devTools: isDev
         },
         minWidth: 775,
         minHeight: 435,
-        width: 1010
+        width: 775
     });
     electron_1.ipcMain.on('min', function () {
         win.minimize();

@@ -19,7 +19,7 @@ const createMainWindow = () => {
 	}
 
 	win = new BrowserWindow({
-		height: 535,
+		height: 435,
 		show: false,
 		frame: false,
 		titleBarStyle: 'hidden',
@@ -33,7 +33,7 @@ const createMainWindow = () => {
 		},
 		minWidth: 775,
 		minHeight: 435,
-		width: 1010
+		width: 775
 	});
 
 	ipcMain.on('min', () => {

@@ -2,6 +2,7 @@
   "name": "hud-viewer",
   "version": "1.0.0",
   "private": true,
+  "author": "Lexogrine",
   "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",

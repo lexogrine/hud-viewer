@@ -27,6 +27,7 @@ const getIP = (code: string) => {
 function App() {
 	const [code, setCode] = useState('');
 	const [huds, setHUDs] = useState<HUD[]>([]);
+	const [status, setStatus] = useState(false);
 
 	const requestHUDs = () => {
 		ipcRenderer.send('reload', getIP(code), code);
@@ -36,8 +37,12 @@ function App() {
 		ipcRenderer.on('code', (event: any, code: string) => {
 			setCode(code);
 		});
-		ipcRenderer.on('huds', (event: any, huds: HUD[] | null) => {
+		ipcRenderer.on('huds', (event: any, huds: HUD[] | null, status?: boolean) => {
 			setHUDs(huds || []);
+			setStatus(!!status);
+		});
+		ipcRenderer.on("connection", (event: any, status: boolean) => {
+			setStatus(status);
 		});
 		ipcRenderer.send('getCode');
 	}, []);
@@ -63,9 +68,10 @@ function App() {
 			</div>
 			<div className="App-container">
 				<main>
+					<p>Lexogrine HUD Viewer</p>
+					<p>LHM Status: <span className={status ? 'online' : 'offline'}>{status ? 'online' : 'offline'}</span></p>
 					{huds.length ? null : (
 						<>
-							<p>Lexogrine HUD Viewer</p>
 							<Input onChange={e => setCode(e.target.value.toUpperCase())} value={code.toUpperCase()} />
 							<Button className="round-btn" onClick={requestHUDs}>
 								Connect

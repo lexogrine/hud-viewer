@@ -9,15 +9,15 @@ var overlay_1 = __importDefault(require("./overlay"));
 var socket_io_client_1 = __importDefault(require("socket.io-client"));
 var fs_1 = __importDefault(require("fs"));
 var path_1 = __importDefault(require("path"));
-var recentCodePath = path_1["default"].join(electron_1.app.getPath("userData"), "code.lhv");
+var recentCodePath = path_1["default"].join(electron_1.app.getPath('userData'), 'code.lhv');
 var saveLatestCode = function (code) {
     fs_1["default"].writeFileSync(recentCodePath, code);
 };
 var getLatestCode = function () {
-    return fs_1["default"].readFileSync(recentCodePath, "utf8");
+    return fs_1["default"].readFileSync(recentCodePath, 'utf8');
 };
 if (!fs_1["default"].existsSync(recentCodePath)) {
-    saveLatestCode("");
+    saveLatestCode('');
 }
 var socket = null;
 electron_1.ipcMain.on('reload', function (event, address, code) {
@@ -25,13 +25,19 @@ electron_1.ipcMain.on('reload', function (event, address, code) {
         .then(function (res) { return res.json(); })
         .then(function (res) {
         socket = socket_io_client_1["default"].connect(address);
+        socket.on("connect", function () {
+            event.reply("connection", true);
+        });
+        socket.on("disconnect", function () {
+            event.reply("connection", false);
+        });
         socket.on('readyToRegister', function () {
             saveLatestCode(code);
             socket.emit('registerReader');
         });
-        event.reply('huds', res);
+        event.reply('huds', res, true);
     })["catch"](function () {
-        event.reply('huds', null);
+        event.reply('huds', null, false);
     });
 });
 electron_1.ipcMain.on('getCode', function (ev) {

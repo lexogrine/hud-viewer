@@ -184,3 +184,9 @@ input.form-control:focus, select.form-control:focus {
   text-transform: uppercase;
   letter-spacing: 2.5px;
 }
+span.online {
+  color: green;
+}
+span.offline {
+  color: red;
+}

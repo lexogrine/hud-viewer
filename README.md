@@ -5,7 +5,7 @@ Lexogrine HUD Viewer is an extension for the Lexogrine HUD Manager (1.8+), that 
 
 ## Download
 
-[Latest release](/lexogrine/hud-viewer/releases/tag/latest)
+[Latest release](/releases/latest)
 ## Preview
 ![Lexogrine HUD Viewer](assets/preview1.jpg?raw=true)
 ![Lexogrine HUD Viewer](assets/preview2.jpg?raw=true)

@@ -25,17 +25,21 @@ const getIP = (code: string) => {
 };
 
 function App() {
-	const [code, setCode] = useState('a9-fe-39-46-515');
+	const [code, setCode] = useState('');
 	const [huds, setHUDs] = useState<HUD[]>([]);
 
 	const requestHUDs = () => {
-		ipcRenderer.send('reload', getIP(code));
+		ipcRenderer.send('reload', getIP(code), code);
 	};
 
 	useEffect(() => {
+		ipcRenderer.on('code', (event: any, code: string) => {
+			setCode(code);
+		});
 		ipcRenderer.on('huds', (event: any, huds: HUD[] | null) => {
 			setHUDs(huds || []);
 		});
+		ipcRenderer.send('getCode');
 	}, []);
 	const minimize = () => {
 		ipcRenderer.send('min');

@@ -24,7 +24,7 @@ const createMainWindow = () => {
 		frame: false,
 		titleBarStyle: 'hidden',
 		//resizable: isDev,
-		title: 'Lexogrine HUD Reader',
+		title: 'Lexogrine HUD Viewer',
 		icon: path.join(__dirname, 'assets/icon.png'),
 		webPreferences: {
 			backgroundThrottling: false,

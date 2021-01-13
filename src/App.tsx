@@ -50,7 +50,9 @@ function App() {
 	return (
 		<div className="App">
 			<div className="window-bar">
-				<div className="window-drag-bar"></div>
+				<div className="window-drag-bar">
+					<div className="title-bar">Lexogrine HUD Viewer</div>
+				</div>
 				<div onClick={minimize} className="app-control minimize"></div>
 				<div onClick={maximize} className="app-control maximize"></div>
 				<div onClick={close} className="app-control close"></div>
@@ -59,7 +61,7 @@ function App() {
 				<main>
 					{huds.length ? null : (
 						<>
-							<p>Lexogrine HUD Reader</p>
+							<p>Lexogrine HUD Viewer</p>
 							<Input onChange={e => setCode(e.target.value.toUpperCase())} value={code.toUpperCase()} />
 							<Button className="round-btn" onClick={requestHUDs}>
 								Connect

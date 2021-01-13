@@ -1,6 +1,6 @@
 {
-  "name": "hud-manager-reader",
-  "version": "0.1.0",
+  "name": "hud-viewer",
+  "version": "1.0.0",
   "private": true,
   "homepage": "./",
   "dependencies": {
@@ -21,8 +21,8 @@
     "web-vitals": "^0.2.4"
   },
   "build": {
-    "appId": "com.lexogrine.hudreader",
-    "productName": "Lexogrine HUD Reader",
+    "appId": "com.lexogrine.hudviewer",
+    "productName": "Lexogrine HUD Viewer",
     "win": {
       "icon": "./dist/build/favicon.ico",
       "target": "NSIS"

@@ -41,7 +41,7 @@ function App() {
 			setHUDs(huds || []);
 			setStatus(!!status);
 		});
-		ipcRenderer.on("connection", (event: any, status: boolean) => {
+		ipcRenderer.on('connection', (event: any, status: boolean) => {
 			setStatus(status);
 		});
 		ipcRenderer.send('getCode');
@@ -69,7 +69,10 @@ function App() {
 			<div className="App-container">
 				<main>
 					<p>Lexogrine HUD Viewer</p>
-					<p>LHM Status: <span className={status ? 'online' : 'offline'}>{status ? 'online' : 'offline'}</span></p>
+					<p>
+						LHM Status:{' '}
+						<span className={status ? 'online' : 'offline'}>{status ? 'online' : 'offline'}</span>
+					</p>
 					{huds.length ? null : (
 						<>
 							<Input onChange={e => setCode(e.target.value.toUpperCase())} value={code.toUpperCase()} />

@@ -27,11 +27,11 @@ ipcMain.on('reload', (event, address: string, code: string) => {
 		.then(res => res.json())
 		.then(res => {
 			socket = io.connect(address);
-			socket.on("connect", () => {
-				event.reply("connection", true);
+			socket.on('connect', () => {
+				event.reply('connection', true);
 			});
-			socket.on("disconnect", () => {
-				event.reply("connection", false);
+			socket.on('disconnect', () => {
+				event.reply('connection', false);
 			});
 			socket.on('readyToRegister', () => {
 				saveLatestCode(code);

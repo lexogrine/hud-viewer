@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Input, Button } from 'reactstrap';
-import { HUD } from './../interfaces';
+import { GSIValidationResponse, HUD } from './../interfaces';
 import HUDEntry from './HUDEntry';
 const { ipcRenderer } = window.require('electron');
 
@@ -28,18 +28,27 @@ function App() {
 	const [code, setCode] = useState('');
 	const [huds, setHUDs] = useState<HUD[]>([]);
 	const [status, setStatus] = useState(false);
+	const [available, setAvailable] = useState(false);
+	const [installed, setInstalled] = useState(false);
 
 	const requestHUDs = () => {
 		ipcRenderer.send('reload', getIP(code), code);
 	};
 
 	useEffect(() => {
+		ipcRenderer.on('validation', (event: unknown, response: GSIValidationResponse) => {
+			setAvailable(response.available);
+			setInstalled(response.installed);
+		});
 		ipcRenderer.on('code', (event: any, code: string) => {
 			setCode(code);
 		});
 		ipcRenderer.on('huds', (event: any, huds: HUD[] | null, status?: boolean) => {
 			setHUDs(huds || []);
 			setStatus(!!status);
+			if (status) {
+				ipcRenderer.send('validateGSI');
+			}
 		});
 		ipcRenderer.on('connection', (event: any, status: boolean) => {
 			setStatus(status);
@@ -55,7 +64,9 @@ function App() {
 	const close = () => {
 		ipcRenderer.send('close');
 	};
-
+	const installGSI = () => {
+		ipcRenderer.send('installGSI');
+	}
 	return (
 		<div className="App">
 			<div className="window-bar">
@@ -73,6 +84,11 @@ function App() {
 						LHM Status:{' '}
 						<span className={status ? 'online' : 'offline'}>{status ? 'online' : 'offline'}</span>
 					</p>
+					{status ? <p>
+						<Button disabled={!available || installed} className="round-btn" onClick={installGSI}>
+							{!available ? 'Not available' : (installed ? 'Installed' : 'Install')}
+						</Button>
+					</p> : null}
 					{huds.length ? null : (
 						<>
 							<Input onChange={e => setCode(e.target.value.toUpperCase())} value={code.toUpperCase()} />

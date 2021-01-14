@@ -61,3 +61,8 @@ export interface HUD {
 	};
 	isDev: boolean;
 }
+
+export interface GSIValidationResponse {
+	installed: boolean;
+	available: boolean;
+}

@@ -5,6 +5,8 @@ import HUD from './overlay';
 import io from 'socket.io-client';
 import fs from 'fs';
 import path from 'path';
+import generateGSI from 'csgogsi-generator';
+import { getGamePath } from 'steam-game-path';
 
 const recentCodePath = path.join(app.getPath('userData'), 'code.lhv');
 
@@ -15,6 +17,36 @@ const saveLatestCode = (code: string) => {
 const getLatestCode = () => {
 	return fs.readFileSync(recentCodePath, 'utf8');
 };
+
+const getIP = (code: string) => {
+	const ipNumbers = code.split('-').map(n => parseInt(n, 16));
+
+	const port = ipNumbers.pop();
+
+	const ip = `${ipNumbers.join('.')}:${port}`;
+	const address = `http://${ip}`;
+	return address;
+};
+const validateGSI = (address): I.GSIValidationResponse => {
+	const steamPath = getGamePath(730);
+	if(!steamPath || !steamPath.game || !steamPath.game.path) return { available: false, installed: false};
+	const cfgPath = path.join(steamPath.game.path, 'csgo', 'cfg', 'gamestate_integration_hudmanager.cfg');
+	if(!fs.existsSync(cfgPath)){
+		return { available: true, installed: false };
+	}
+	const fileText = fs.readFileSync(cfgPath, 'utf8');
+	return { available: true, installed: fileText === generateGSI("HUDMANAGERGSI", address + '/').vdf };
+
+}
+
+const createGSIFile = (address: string) => {
+	const gsiValidation = validateGSI(address);
+	if(!gsiValidation.available) return gsiValidation;
+	const steamPath = getGamePath(730);
+	const cfgPath = path.join(steamPath.game.path, 'csgo', 'cfg', 'gamestate_integration_hudmanager.cfg');
+	fs.writeFileSync(cfgPath, generateGSI("HUDMANAGERGSI", address + '/').vdf);
+	return { available: true, installed: true };
+}
 
 if (!fs.existsSync(recentCodePath)) {
 	saveLatestCode('');
@@ -37,6 +69,7 @@ ipcMain.on('reload', (event, address: string, code: string) => {
 				saveLatestCode(code);
 				socket.emit('registerReader');
 			});
+			//createGSIFile(address);
 			event.reply('huds', res, true);
 		})
 		.catch(() => {
@@ -44,8 +77,17 @@ ipcMain.on('reload', (event, address: string, code: string) => {
 		});
 });
 
+ipcMain.on('validateGSI', (ev) => {
+	ev.reply('validation', validateGSI(getIP(getLatestCode())))
+});
+
 ipcMain.on('getCode', ev => {
 	ev.reply('code', getLatestCode());
+});
+
+ipcMain.on('installGSI', ev => {
+	createGSIFile(getIP(getLatestCode()));
+	ev.reply('validation', validateGSI(getIP(getLatestCode())));
 });
 
 ipcMain.on('openHUD', (event, hud: I.HUD) => {

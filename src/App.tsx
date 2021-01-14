@@ -66,7 +66,7 @@ function App() {
 	};
 	const installGSI = () => {
 		ipcRenderer.send('installGSI');
-	}
+	};
 	return (
 		<div className="App">
 			<div className="window-bar">
@@ -84,11 +84,13 @@ function App() {
 						LHM Status:{' '}
 						<span className={status ? 'online' : 'offline'}>{status ? 'online' : 'offline'}</span>
 					</p>
-					{status ? <p>
-						<Button disabled={!available || installed} className="round-btn" onClick={installGSI}>
-							{!available ? 'Not available' : (installed ? 'Installed' : 'Install')}
-						</Button>
-					</p> : null}
+					{status ? (
+						<p>
+							<Button disabled={!available || installed} className="round-btn" onClick={installGSI}>
+								{!available ? 'Not available' : installed ? 'Installed' : 'Install'}
+							</Button>
+						</p>
+					) : null}
 					{huds.length ? null : (
 						<>
 							<Input onChange={e => setCode(e.target.value.toUpperCase())} value={code.toUpperCase()} />

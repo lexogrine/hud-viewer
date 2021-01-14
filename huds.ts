@@ -29,24 +29,23 @@ const getIP = (code: string) => {
 };
 const validateGSI = (address): I.GSIValidationResponse => {
 	const steamPath = getGamePath(730);
-	if(!steamPath || !steamPath.game || !steamPath.game.path) return { available: false, installed: false};
+	if (!steamPath || !steamPath.game || !steamPath.game.path) return { available: false, installed: false };
 	const cfgPath = path.join(steamPath.game.path, 'csgo', 'cfg', 'gamestate_integration_hudmanager.cfg');
-	if(!fs.existsSync(cfgPath)){
+	if (!fs.existsSync(cfgPath)) {
 		return { available: true, installed: false };
 	}
 	const fileText = fs.readFileSync(cfgPath, 'utf8');
-	return { available: true, installed: fileText === generateGSI("HUDMANAGERGSI", address + '/').vdf };
-
-}
+	return { available: true, installed: fileText === generateGSI('HUDMANAGERGSI', address + '/').vdf };
+};
 
 const createGSIFile = (address: string) => {
 	const gsiValidation = validateGSI(address);
-	if(!gsiValidation.available) return gsiValidation;
+	if (!gsiValidation.available) return gsiValidation;
 	const steamPath = getGamePath(730);
 	const cfgPath = path.join(steamPath.game.path, 'csgo', 'cfg', 'gamestate_integration_hudmanager.cfg');
-	fs.writeFileSync(cfgPath, generateGSI("HUDMANAGERGSI", address + '/').vdf);
+	fs.writeFileSync(cfgPath, generateGSI('HUDMANAGERGSI', address + '/').vdf);
 	return { available: true, installed: true };
-}
+};
 
 if (!fs.existsSync(recentCodePath)) {
 	saveLatestCode('');
@@ -77,8 +76,8 @@ ipcMain.on('reload', (event, address: string, code: string) => {
 		});
 });
 
-ipcMain.on('validateGSI', (ev) => {
-	ev.reply('validation', validateGSI(getIP(getLatestCode())))
+ipcMain.on('validateGSI', ev => {
+	ev.reply('validation', validateGSI(getIP(getLatestCode())));
 });
 
 ipcMain.on('getCode', ev => {

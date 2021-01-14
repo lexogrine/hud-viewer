@@ -34,7 +34,7 @@ var validateGSI = function (address) {
         return { available: true, installed: false };
     }
     var fileText = fs_1["default"].readFileSync(cfgPath, 'utf8');
-    return { available: true, installed: fileText === csgogsi_generator_1["default"]("HUDMANAGERGSI", address + '/').vdf };
+    return { available: true, installed: fileText === csgogsi_generator_1["default"]('HUDMANAGERGSI', address + '/').vdf };
 };
 var createGSIFile = function (address) {
     var gsiValidation = validateGSI(address);
@@ -42,7 +42,7 @@ var createGSIFile = function (address) {
         return gsiValidation;
     var steamPath = steam_game_path_1.getGamePath(730);
     var cfgPath = path_1["default"].join(steamPath.game.path, 'csgo', 'cfg', 'gamestate_integration_hudmanager.cfg');
-    fs_1["default"].writeFileSync(cfgPath, csgogsi_generator_1["default"]("HUDMANAGERGSI", address + '/').vdf);
+    fs_1["default"].writeFileSync(cfgPath, csgogsi_generator_1["default"]('HUDMANAGERGSI', address + '/').vdf);
     return { available: true, installed: true };
 };
 if (!fs_1["default"].existsSync(recentCodePath)) {

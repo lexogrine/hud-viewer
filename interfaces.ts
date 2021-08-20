@@ -55,6 +55,7 @@ export interface HUD {
 	panel?: PanelTemplate[];
 	keybinds?: KeyBind[];
 	url: string;
+	allowAppsOnTop?: boolean;
 	boltobserv?: {
 		css?: boolean;
 		maps?: boolean;

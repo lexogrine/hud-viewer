@@ -24,7 +24,7 @@ class HUD {
 			show: false,
 			title: hud.name,
 			resizable: false,
-			alwaysOnTop: true,
+			alwaysOnTop: !hud.allowAppsOnTop,
 			frame: false,
 			transparent: true,
 			focusable: true,
@@ -32,10 +32,12 @@ class HUD {
 				backgroundThrottling: false
 			}
 		});
-		hudWindow.on('show', () => {
-			hudWindow.setAlwaysOnTop(true);
-		});
-		hudWindow.setIgnoreMouseEvents(true);
+		if (!hud.allowAppsOnTop) {
+			hudWindow.on('show', () => {
+				hudWindow.setAlwaysOnTop(true);
+			});
+			hudWindow.setIgnoreMouseEvents(true);
+		}
 
 		const tray = new Tray(path.join(__dirname, 'favicon.ico'));
 

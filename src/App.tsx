@@ -3,7 +3,12 @@ import './App.css';
 import { Input, Button } from 'reactstrap';
 import { GSIValidationResponse, HUD } from './../interfaces';
 import HUDEntry from './HUDEntry';
-const { ipcRenderer } = window.require('electron');
+
+declare global {
+	interface Window {
+		ipcRenderer?: any;
+	}
+}
 
 const hashCode = (s: string) =>
 	s
@@ -32,40 +37,40 @@ function App() {
 	const [installed, setInstalled] = useState(false);
 
 	const requestHUDs = () => {
-		ipcRenderer.send('reload', getIP(code), code);
+		window.ipcRenderer?.send('reload', getIP(code), code);
 	};
 
 	useEffect(() => {
-		ipcRenderer.on('validation', (event: unknown, response: GSIValidationResponse) => {
+		window.ipcRenderer?.on('validation', (event: unknown, response: GSIValidationResponse) => {
 			setAvailable(response.available);
 			setInstalled(response.installed);
 		});
-		ipcRenderer.on('code', (event: any, code: string) => {
+		window.ipcRenderer?.on('code', (event: any, code: string) => {
 			setCode(code);
 		});
-		ipcRenderer.on('huds', (event: any, huds: HUD[] | null, status?: boolean) => {
+		window.ipcRenderer?.on('huds', (event: any, huds: HUD[] | null, status?: boolean) => {
 			setHUDs(huds || []);
 			setStatus(!!status);
 			if (status) {
-				ipcRenderer.send('validateGSI');
+				window.ipcRenderer?.send('validateGSI');
 			}
 		});
-		ipcRenderer.on('connection', (event: any, status: boolean) => {
+		window.ipcRenderer?.on('connection', (event: any, status: boolean) => {
 			setStatus(status);
 		});
-		ipcRenderer.send('getCode');
+		window.ipcRenderer?.send('getCode');
 	}, []);
 	const minimize = () => {
-		ipcRenderer.send('min');
+		window.ipcRenderer?.send('min');
 	};
 	const maximize = () => {
-		ipcRenderer.send('max');
+		window.ipcRenderer?.send('max');
 	};
 	const close = () => {
-		ipcRenderer.send('close');
+		window.ipcRenderer?.send('close');
 	};
 	const installGSI = () => {
-		ipcRenderer.send('installGSI');
+		window.ipcRenderer?.send('installGSI');
 	};
 	return (
 		<div className="App">

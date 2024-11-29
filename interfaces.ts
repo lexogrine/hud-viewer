@@ -46,6 +46,7 @@ export type PanelTemplate = {
 
 export interface HUD {
 	name: string;
+	resourceId: string;
 	version: string;
 	author: string;
 	legacy: boolean;
@@ -54,7 +55,10 @@ export interface HUD {
 	killfeed: boolean;
 	panel?: PanelTemplate[];
 	keybinds?: KeyBind[];
+	thumbnail: string;
 	url: string;
+	variantUrl: string;
+	variants?: string[];
 	allowAppsOnTop?: boolean;
 	boltobserv?: {
 		css?: boolean;

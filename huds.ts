@@ -2,7 +2,7 @@ import { ipcMain, app } from 'electron';
 import fetch from 'node-fetch';
 import * as I from './interfaces';
 import HUD from './overlay';
-import io from 'socket.io-client';
+import io, { Socket } from 'socket.io-client';
 import fs from 'fs';
 import path from 'path';
 import generateGSI from 'csgogsi-generator';
@@ -24,10 +24,10 @@ const getIP = (code: string) => {
 	const port = ipNumbers.pop();
 
 	const ip = `${ipNumbers.join('.')}:${port}`;
-	const address = `http://${ip}`;
+	const address: string = `http://${ip}`;
 	return address;
 };
-const validateGSI = (address): I.GSIValidationResponse => {
+const validateGSI = (address: string): I.GSIValidationResponse => {
 	const steamPath = getGamePath(730);
 	if (!steamPath || !steamPath.game || !steamPath.game.path) return { available: false, installed: false };
 	const cfgPath = path.join(steamPath.game.path, 'csgo', 'cfg', 'gamestate_integration_hudmanager.cfg');
@@ -42,6 +42,7 @@ const createGSIFile = (address: string) => {
 	const gsiValidation = validateGSI(address);
 	if (!gsiValidation.available) return gsiValidation;
 	const steamPath = getGamePath(730);
+	if (!steamPath || !steamPath.game) return gsiValidation;
 	const cfgPath = path.join(steamPath.game.path, 'csgo', 'cfg', 'gamestate_integration_hudmanager.cfg');
 	fs.writeFileSync(cfgPath, generateGSI('HUDMANAGERGSI', address + '/').vdf);
 	return { available: true, installed: true };
@@ -51,22 +52,22 @@ if (!fs.existsSync(recentCodePath)) {
 	saveLatestCode('');
 }
 
-let socket: SocketIOClient.Socket | null = null;
+let socket: Socket | null = null;
 
 ipcMain.on('reload', (event, address: string, code: string) => {
 	fetch(`${address}/api/huds`)
 		.then(res => res.json())
 		.then(res => {
-			socket = io.connect(address);
-			socket.on('connect', () => {
+			socket = io(address);
+			socket!.on('connect', () => {
 				event.reply('connection', true);
 			});
-			socket.on('disconnect', () => {
+			socket!.on('disconnect', () => {
 				event.reply('connection', false);
 			});
-			socket.on('readyToRegister', () => {
+			socket!.on('readyToRegister', () => {
 				saveLatestCode(code);
-				socket.emit('registerReader');
+				socket!.emit('registerReader');
 			});
 			//createGSIFile(address);
 			event.reply('huds', res, true);

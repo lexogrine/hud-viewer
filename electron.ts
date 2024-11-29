@@ -2,7 +2,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import './huds';
-export const isDev = process.env.DEV === 'true';
+export const isDev = process.env.VITE_DEV === 'true';
 
 const createMainWindow = () => {
 	let win: BrowserWindow | null;
@@ -28,7 +28,8 @@ const createMainWindow = () => {
 		icon: path.join(__dirname, 'assets/icon.png'),
 		webPreferences: {
 			backgroundThrottling: false,
-			nodeIntegration: true
+			nodeIntegration: true,
+			preload: path.join(__dirname, 'preload.js')
 			//devTools: isDev
 		},
 		minWidth: 775,
@@ -37,30 +38,30 @@ const createMainWindow = () => {
 	});
 
 	ipcMain.on('min', () => {
-		win.minimize();
+		win!.minimize();
 	});
 
 	ipcMain.on('max', () => {
-		if (win.isMaximized()) {
-			win.restore();
+		if (win!.isMaximized()) {
+			win!.restore();
 		} else {
-			win.maximize();
+			win!.maximize();
 		}
 	});
 
 	ipcMain.on('close', () => {
-		win.close();
+		win!.close();
 	});
 
 	win.once('ready-to-show', () => {
 		if (win) {
-			win.show();
+			win!.show();
 		}
 	});
 	// win.setMenu(null);
 	win.setMenuBarVisibility(!isDev);
 
-	win.loadURL(isDev ? 'http://localhost:3000' : `file://${__dirname}/build/index.html`);
+	win.loadURL(isDev ? 'http://localhost:3001' : `file://${__dirname}/dist/build/index.html`);
 	win.on('close', () => {
 		win = null;
 		app.quit();

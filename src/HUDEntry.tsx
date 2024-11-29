@@ -5,24 +5,28 @@ import * as I from './../interfaces';
 import Display from './assets/Display.png';
 import Map from './assets/Map.png';
 import Killfeed from './assets/Killfeed.png';
-const { ipcRenderer } = window.require('electron');
 
 interface IProps {
 	hud: I.HUD;
 	url: string;
 }
 
+const DEFAULT_THUMBNAIL_API_PATH = "default/icon.png";
+
 const HUDEntry = ({ hud, url }: IProps) => {
 	const openHUD = () => {
-		ipcRenderer.send('openHUD', hud);
+		window.ipcRenderer?.send('openHUD', hud);
 	};
+
+	const portLocation = hud.url.indexOf(':1349');
+	const apiUrl = hud.url.substring(0, portLocation + 6);
 
 	return (
 		<Row key={hud.dir} className="hudRow">
 			<Col s={12}>
 				<Row>
 					<Col className="centered thumb">
-						<img src={`${url}/huds/${hud.dir}/thumbnail`} alt={`${hud.name}`} />
+						<img src={hud.thumbnail ? `${apiUrl}huds/${hud.resourceId}/thumbnail` : `${apiUrl}/${DEFAULT_THUMBNAIL_API_PATH}`} alt={`${hud.name}`} />
 					</Col>
 					<Col style={{ flex: 10, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
 						<Row>

@@ -2,85 +2,88 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-exports.__esModule = true;
-var electron_1 = require("electron");
-var node_fetch_1 = __importDefault(require("node-fetch"));
-var overlay_1 = __importDefault(require("./overlay"));
-var socket_io_client_1 = __importDefault(require("socket.io-client"));
-var fs_1 = __importDefault(require("fs"));
-var path_1 = __importDefault(require("path"));
-var csgogsi_generator_1 = __importDefault(require("csgogsi-generator"));
-var steam_game_path_1 = require("steam-game-path");
-var recentCodePath = path_1["default"].join(electron_1.app.getPath('userData'), 'code.lhv');
-var saveLatestCode = function (code) {
-    fs_1["default"].writeFileSync(recentCodePath, code);
+Object.defineProperty(exports, "__esModule", { value: true });
+const electron_1 = require("electron");
+const node_fetch_1 = __importDefault(require("node-fetch"));
+const overlay_1 = __importDefault(require("./overlay"));
+const socket_io_client_1 = __importDefault(require("socket.io-client"));
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
+const csgogsi_generator_1 = __importDefault(require("csgogsi-generator"));
+const steam_game_path_1 = require("steam-game-path");
+const recentCodePath = path_1.default.join(electron_1.app.getPath('userData'), 'code.lhv');
+const saveLatestCode = (code) => {
+    fs_1.default.writeFileSync(recentCodePath, code);
 };
-var getLatestCode = function () {
-    return fs_1["default"].readFileSync(recentCodePath, 'utf8');
+const getLatestCode = () => {
+    return fs_1.default.readFileSync(recentCodePath, 'utf8');
 };
-var getIP = function (code) {
-    var ipNumbers = code.split('-').map(function (n) { return parseInt(n, 16); });
-    var port = ipNumbers.pop();
-    var ip = ipNumbers.join('.') + ":" + port;
-    var address = "http://" + ip;
+const getIP = (code) => {
+    const ipNumbers = code.split('-').map(n => parseInt(n, 16));
+    const port = ipNumbers.pop();
+    const ip = `${ipNumbers.join('.')}:${port}`;
+    const address = `http://${ip}`;
     return address;
 };
-var validateGSI = function (address) {
-    var steamPath = steam_game_path_1.getGamePath(730);
+const validateGSI = (address) => {
+    const steamPath = (0, steam_game_path_1.getGamePath)(730);
     if (!steamPath || !steamPath.game || !steamPath.game.path)
         return { available: false, installed: false };
-    var cfgPath = path_1["default"].join(steamPath.game.path, 'csgo', 'cfg', 'gamestate_integration_hudmanager.cfg');
-    if (!fs_1["default"].existsSync(cfgPath)) {
+    const cfgPath = path_1.default.join(steamPath.game.path, 'csgo', 'cfg', 'gamestate_integration_hudmanager.cfg');
+    if (!fs_1.default.existsSync(cfgPath)) {
         return { available: true, installed: false };
     }
-    var fileText = fs_1["default"].readFileSync(cfgPath, 'utf8');
-    return { available: true, installed: fileText === csgogsi_generator_1["default"]('HUDMANAGERGSI', address + '/').vdf };
+    const fileText = fs_1.default.readFileSync(cfgPath, 'utf8');
+    return { available: true, installed: fileText === (0, csgogsi_generator_1.default)('HUDMANAGERGSI', address + '/').vdf };
 };
-var createGSIFile = function (address) {
-    var gsiValidation = validateGSI(address);
+const createGSIFile = (address) => {
+    const gsiValidation = validateGSI(address);
     if (!gsiValidation.available)
         return gsiValidation;
-    var steamPath = steam_game_path_1.getGamePath(730);
-    var cfgPath = path_1["default"].join(steamPath.game.path, 'csgo', 'cfg', 'gamestate_integration_hudmanager.cfg');
-    fs_1["default"].writeFileSync(cfgPath, csgogsi_generator_1["default"]('HUDMANAGERGSI', address + '/').vdf);
+    const steamPath = (0, steam_game_path_1.getGamePath)(730);
+    if (!steamPath || !steamPath.game)
+        return gsiValidation;
+    const cfgPath = path_1.default.join(steamPath.game.path, 'csgo', 'cfg', 'gamestate_integration_hudmanager.cfg');
+    fs_1.default.writeFileSync(cfgPath, (0, csgogsi_generator_1.default)('HUDMANAGERGSI', address + '/').vdf);
     return { available: true, installed: true };
 };
-if (!fs_1["default"].existsSync(recentCodePath)) {
+if (!fs_1.default.existsSync(recentCodePath)) {
     saveLatestCode('');
 }
-var socket = null;
-electron_1.ipcMain.on('reload', function (event, address, code) {
-    node_fetch_1["default"](address + "/api/huds")
-        .then(function (res) { return res.json(); })
-        .then(function (res) {
-        socket = socket_io_client_1["default"].connect(address);
-        socket.on('connect', function () {
+let socket = null;
+electron_1.ipcMain.on('reload', (event, address, code) => {
+    (0, node_fetch_1.default)(`${address}/api/huds`)
+        .then(res => res.json())
+        .then(res => {
+        socket = (0, socket_io_client_1.default)(address);
+        socket.on('connect', () => {
             event.reply('connection', true);
         });
-        socket.on('disconnect', function () {
+        socket.on('disconnect', () => {
             event.reply('connection', false);
         });
-        socket.on('readyToRegister', function () {
+        socket.on('readyToRegister', () => {
             saveLatestCode(code);
             socket.emit('registerReader');
         });
         //createGSIFile(address);
         event.reply('huds', res, true);
-    })["catch"](function () {
+    })
+        .catch(() => {
         event.reply('huds', null, false);
     });
 });
-electron_1.ipcMain.on('validateGSI', function (ev) {
+electron_1.ipcMain.on('validateGSI', ev => {
     ev.reply('validation', validateGSI(getIP(getLatestCode())));
 });
-electron_1.ipcMain.on('getCode', function (ev) {
+electron_1.ipcMain.on('getCode', ev => {
     ev.reply('code', getLatestCode());
 });
-electron_1.ipcMain.on('installGSI', function (ev) {
+electron_1.ipcMain.on('installGSI', ev => {
     createGSIFile(getIP(getLatestCode()));
     ev.reply('validation', validateGSI(getIP(getLatestCode())));
 });
-electron_1.ipcMain.on('openHUD', function (event, hud) {
-    overlay_1["default"].open(hud, socket);
+electron_1.ipcMain.on('openHUD', (event, hud) => {
+    overlay_1.default.open(hud, socket);
     //console.log(hud);
 });

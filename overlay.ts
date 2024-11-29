@@ -1,7 +1,7 @@
 import { BrowserWindow, Tray, Menu, globalShortcut } from 'electron';
 import * as path from 'path';
 //import ip from 'ip';
-//import socketio, { Socket } from 'socket.io-client';
+import  { Socket } from 'socket.io-client';
 import * as I from './interfaces';
 
 class HUD {
@@ -16,12 +16,12 @@ class HUD {
 		this.hud = null;
 	}
 
-	async open(hud: I.HUD, io: SocketIOClient.Socket | null) {
+	async open(hud: I.HUD, io: Socket | null) {
 		if (this.current !== null || this.hud !== null) return null;
 		if (hud === null) return null;
 		const hudWindow = new BrowserWindow({
 			fullscreen: true,
-			show: false,
+			show: true,
 			title: hud.name,
 			resizable: false,
 			alwaysOnTop: !hud.allowAppsOnTop,
@@ -79,7 +79,7 @@ class HUD {
 		return true;
 	}
 
-	showWindow(hud: I.HUD, io: SocketIOClient.Socket | null) {
+	showWindow(hud: I.HUD, io: Socket | null) {
 		if (!this.current) return;
 		this.current.setOpacity(1);
 		this.current.show();
